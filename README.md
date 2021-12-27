@@ -63,15 +63,6 @@
 
 Kubeadm是一个工具，提供 kubeadm init 和 kubeadm join，用于快速部署k8s集群
 
-```bash
-# 创建一个 Master 节点
-kubeadm init
-
-
-# 将一个 Node 节点加入到指定集群里
-kubeadm join <Master节点的ip和port>
-```
-
 - `二进制`
 
 💯 推荐，从官方下载发行版的二进制包，手动部署每个组件，组件k8s集群
@@ -98,3 +89,75 @@ kubeadm join <Master节点的ip和port>
 9. [bootstrap-token] 自动为kubelet颁发证书
 10. [addons] 安装插件 CoreDNS kube-proxy
 
+## 使用kubeadm快速搭建k8s集群
+
+```bash
+# 创建一个 Master 节点
+kubeadm init
+
+
+# 将一个 Node 节点加入到指定集群里
+kubeadm join <Master节点的ip和port>
+```
+
+### 1. 安装要求
+
+在开始之前，部署Kubernetes集群机器需要满足以下几个条件：
+
+- 一台或多台机器，操作系统 CentOS7.x-86_x64
+- 硬件配置：2GB或更多RAM，2个CPU或更多CPU，硬盘30GB或更多
+- 集群中所有机器之间网络互通
+- 可以访问外网，需要拉取镜像
+- 禁止swap分区
+
+### 2. 准备环境
+
+| 角色       | IP            |
+| ---------- | ------------- |
+| k8s-master | 192.168.31.61 |
+| k8s-node1  | 192.168.31.62 |
+| k8s-node2  | 192.168.31.63 |
+
+```bash
+关闭防火墙：
+$ systemctl stop firewalld
+$ systemctl disable firewalld
+
+关闭selinux：
+$ sed -i 's/enforcing/disabled/' /etc/selinux/config  # 永久
+$ setenforce 0  # 临时
+
+关闭swap：
+$ swapoff -a  # 临时
+$ vim /etc/fstab  # 永久
+
+设置主机名：
+$ hostnamectl set-hostname <hostname>
+
+在master添加hosts：
+$ cat >> /etc/hosts << EOF
+192.168.31.61 k8s-master
+192.168.31.62 k8s-node1
+192.168.31.63 k8s-node2
+EOF
+
+将桥接的IPv4流量传递到iptables的链：
+$ cat > /etc/sysctl.d/k8s.conf << EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+$ sysctl --system  # 生效
+
+时间同步：
+$ yum install ntpdate -y
+$ ntpdate time.windows.com
+```
+
+### 3. 安装Docker/kubeadm/kubelet【所有节点】
+
+Kubernetes默认CRI（容器运行时）为Docker，因此先安装Docker。
+
+#### 3.1 安装Docker
+
+- 去DigitalOcean翻教程，那里最好
+- 配置镜像下载加速器

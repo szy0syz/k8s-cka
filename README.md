@@ -161,3 +161,7 @@ Kubernetes默认CRI（容器运行时）为Docker，因此先安装Docker。
 
 - 去DigitalOcean翻教程，那里最好
 - 配置镜像下载加速器
+
+## k8s CNI网络模型
+
+![003](images/003.jpg)

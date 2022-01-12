@@ -165,3 +165,9 @@ Kubernetes默认CRI（容器运行时）为Docker，因此先安装Docker。
 ## k8s CNI网络模型
 
 ![003](images/003.jpg)
+
+解决的问题：
+
+- 1.统一管理这些k8s node网段，保障每个容器分配不一样的ip地址
+- 2.要知道转发给哪个docker主机？
+- 2.怎么实现这个转发(从docker主机1的容器A转发到另一台docker主机2的容器β)

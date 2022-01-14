@@ -184,3 +184,5 @@ CNI (Container Network Interface, 容器网络接口): 是一个容器网络规�
 - Pod 内部获取到的 IP 地址与其他 Pod 或者节点与其通信时的IP地址是同一个
 
 主流网络组件有： `Flannel` `Calico` 等
+
+![004](images/004.png)

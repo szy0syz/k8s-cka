@@ -171,3 +171,16 @@ Kubernetes默认CRI（容器运行时）为Docker，因此先安装Docker。
 - 1.统一管理这些k8s node网段，保障每个容器分配不一样的ip地址
 - 2.要知道转发给哪个docker主机？
 - 2.怎么实现这个转发(从docker主机1的容器A转发到另一台docker主机2的容器β)
+
+CNI (Container Network Interface, 容器网络接口): 是一个容器网络规范，k8s网络就是采用CNI规范。
+
+**k8s是一个扁平化网络。**
+
+> 即所有部署的网络组件都必须满足如下要求：
+
+- 一个 `Pod` 一个 `IP`
+- 所有的 Pod 可以与任何其他 Pod 直接通信
+- 所有节点可以与所有 Pod 同时直接通信
+- Pod 内部获取到的 IP 地址与其他 Pod 或者节点与其通信时的IP地址是同一个
+
+主流网络组件有： `Flannel` `Calico` 等

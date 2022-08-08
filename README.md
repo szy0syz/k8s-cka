@@ -294,3 +294,34 @@ sleep-job-xmqn8   0/1     Terminating         0          4s
 ```
 
 ![006](images/006.jpg)
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: echo-cj
+
+spec:
+  schedule: '*/1 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - image: busybox
+            name: echo-cj
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/echo"]
+            args: ["hello", "world"]
+```
+
+```bash
+$ k get pod
+NAME                     READY   STATUS      RESTARTS   AGE
+echo-cj-27666143-z5m9j   0/1     Completed   0          2m14s
+echo-cj-27666144-x6ndt   0/1     Completed   0          74s
+echo-cj-27666145-tfpqm   0/1     Completed   0          14s
+```
+
+![007](images/007.jpg)

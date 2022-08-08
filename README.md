@@ -232,3 +232,65 @@ echo-job-jtjzz   0/1     Completed   0          16s
 ```
 
 > 的确，我看到了新的Pod，它其实是被Job管理的。
+>
+> 来吧，提升一下。
+
+- activeDeadlineSeconds，设置 Pod 运行的超时时间。
+- backoffLimit，设置 Pod 的失败重试次数。
+- completions，Job 完成需要运行多少个 Pod，默认是 1 个。
+- parallelism，它与 completions 相关，表示允许并发运行的 Pod 数量，避免过多占用资源。
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sleep-job
+
+spec:
+  activeDeadlineSeconds: 15
+  backoffLimit: 2
+  completions: 4
+  parallelism: 2
+
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - image: busybox
+        name: echo-job
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+          - -c
+          - sleep $(($RANDOM % 10 + 1)) && echo done
+```
+
+> 创建一个 Job 对象，名字叫“sleep-job”，它随机睡眠一段时间再退出，模拟运行时间较长的作业（比如 MapReduce）。Job 的参数设置成 15 秒超时，最多重试 2 次，总共需要运行完 4 个 Pod，但同一时刻最多并发 2 个 Pod。
+
+```bash
+~/k8s ⌚ 17:55:05
+$ k apply -f sleep-job.yaml
+job.batch/sleep-job created
+
+~/k8s ⌚ 17:55:15
+$ kubectl get pod -w
+NAME              READY   STATUS      RESTARTS   AGE
+sleep-job-b9fqt   1/1     Running     0          6s
+sleep-job-clqrl   1/1     Running     0          11s
+sleep-job-lpm8q   0/1     Completed   0          11s
+sleep-job-clqrl   0/1     Completed   0          11s
+sleep-job-b9fqt   0/1     Completed   0          6s
+sleep-job-clqrl   0/1     Completed   0          13s
+sleep-job-xmqn8   0/1     Pending     0          0s
+sleep-job-xmqn8   0/1     Pending     0          0s
+sleep-job-b9fqt   0/1     Completed   0          8s
+sleep-job-xmqn8   0/1     ContainerCreating   0          0s
+sleep-job-xmqn8   1/1     Running             0          1s
+sleep-job-xmqn8   1/1     Terminating         0          2s
+sleep-job-xmqn8   0/1     Terminating         0          2s
+sleep-job-xmqn8   0/1     Terminating         0          4s
+sleep-job-xmqn8   0/1     Terminating         0          4s
+sleep-job-xmqn8   0/1     Terminating         0          4s
+```
+
+![006](images/006.jpg)

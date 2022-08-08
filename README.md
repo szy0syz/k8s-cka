@@ -102,7 +102,7 @@ kubeadm join <Master节点的ip和port>
 
 ### 1. 安装要求
 
-在开始之前，部署Kubernetes集群机器需要满足以下几个条件：
+在开始之前，部署 `Kubernetes` 集群机器需要满足以下几个条件：
 
 - 一台或多台机器，操作系统 CentOS7.x-86_x64
 - 硬件配置：2GB或更多RAM，2个CPU或更多CPU，硬盘30GB或更多
@@ -155,7 +155,7 @@ $ ntpdate time.windows.com
 
 ### 3. 安装Docker/kubeadm/kubelet【所有节点】
 
-Kubernetes默认CRI（容器运行时）为Docker，因此先安装Docker。
+`Kubernetes` 默认CRI（容器运行时）为Docker，因此先安装Docker。
 
 #### 3.1 安装Docker
 
@@ -186,3 +186,49 @@ CNI (Container Network Interface, 容器网络接口): 是一个容器网络规�
 主流网络组件有： `Flannel` `Calico` 等
 
 ![004](images/004.png)
+
+## 实验：Job/CronJob
+
+```bash
+export out="--dry-run=client -o yaml"
+kubectl create job echo-job --image=busybox $out
+```
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: echo-job
+
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - image: busybox
+        name: echo-job
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/echo"]
+        args: ["hello", "world"]
+```
+
+- 此时我们在YAML里看到了两个spec，这个是咋回事呢？
+  - 其实就是在Job对象里使用了组合模式的结果
+  - template 字段定义了一个应用模板，里面又嵌套了一个 Pod，这样Job就可以才这个模板里创造新的Pod出来
+  - 而这个Pod是受到Job管理控制的，不能与apiserver打交道
+
+![005](images/005.jpg)
+
+```bash
+~/k8s ⌚ 17:40:53
+$ k get job
+NAME       COMPLETIONS   DURATION   AGE
+echo-job   1/1           5s         12s
+
+~/k8s ⌚ 17:40:57
+$ k get pod
+NAME             READY   STATUS      RESTARTS   AGE
+echo-job-jtjzz   0/1     Completed   0          16s
+```
+
+> 的确，我看到了新的Pod，它其实是被Job管理的。

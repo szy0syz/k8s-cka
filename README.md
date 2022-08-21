@@ -418,5 +418,68 @@ touch szy.txt
 ### PV + NFS
 
 > 刚刚那个是单机的，我们得来个网络盘才行。
+>
+> 晕死，一定要在ngs服务端提前建好文件夹
+
+```yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-1g-pv
+
+spec:
+  storageClassName: nfs
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 1Gi
+
+  nfs:
+    path: /tmp/nfs/1g-pv
+    server: 10.124.0.2
+
+###
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-static-pvc
+
+spec:
+  storageClassName: nfs
+  accessModes:
+    - ReadWriteMany
+
+  resources:
+    requests:
+      storage: 1Gi
+
+###
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-static-pod
+
+spec:
+  volumes:
+  - name: nfs-pvc-vol
+    persistentVolumeClaim:
+      claimName: nfs-static-pvc
+
+  containers:
+    - name: nfs-pvc-test
+      image: nginx:alpine
+      ports:
+      - containerPort: 80
+
+      volumeMounts:
+        - name: nfs-pvc-vol
+          mountPath: /tmp
+```
 
 ### PV + Provisioner
+
+> 现在PV已经能动态了，可以适应飘逸pod了，但还需要人工分配，麻烦了。
+>
+> k8s 里有“动态存储卷”的概念，它可以用 StorageClass 绑定一个 Provisioner 对象，而这个 Provisioner 就是一个能够自动管理存储、创建 PV 的应用，代替了原来系统管理员的手工劳动。

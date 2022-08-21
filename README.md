@@ -414,3 +414,9 @@ touch szy.txt
 ```
 
 <img width="426" alt="image" src="https://user-images.githubusercontent.com/10555820/185780521-0d90a049-96ee-4259-be0f-a1892fda8d09.png">
+
+### PV + NFS
+
+> 刚刚那个是单机的，我们得来个网络盘才行。
+
+### PV + Provisioner

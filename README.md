@@ -165,6 +165,8 @@ $ ntpdate time.windows.com
 ## 基于kubeadmin安装k8s集群
 
 > 已在DO的Ubuntu 20.2中测试，22中不行！ —— 2022.8.22
+>
+> 记得给api-server放个外网地址！
 
 ```
 # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/

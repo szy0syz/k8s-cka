@@ -376,6 +376,8 @@ spec:
 
 > 第二步执行了以后，记得去看下pv和pvc是否绑定在一起了。
 
+<img width="426" alt="image" src="https://user-images.githubusercontent.com/10555820/185780584-1f5ee933-1604-4c74-b859-48fa5f2b06ff.png">
+
 - 第三步：给Pod挂载PersistentVolume
   - 虽然嘴巴上说是PersistentVolume，但我们要用的其实是 pvc
   - `claimName: host-5m-pvc` 是pvc的metadata里的 `name` 哦！
@@ -410,3 +412,5 @@ k exec -it host-pvc-pod -- sh
 cd /tmp
 touch szy.txt
 ```
+
+<img width="426" alt="image" src="https://user-images.githubusercontent.com/10555820/185780521-0d90a049-96ee-4259-be0f-a1892fda8d09.png">

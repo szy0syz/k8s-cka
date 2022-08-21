@@ -354,3 +354,59 @@ spec:
   hostPath:
     path: /tmp/host-10m-pv/
 ```
+
+- 第二步：来个pvc，声明下我们有这么一个需求，怎么批，由k8s自己调度去
+  - 注意，这里我们需要定义的需求尽可能接近pv的定义，这样就可以匹配到了
+  - 估计k8s肯定有一个匹配算法，磁盘的大小、快慢、读写模式等等
+
+```yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: host-5m-pvc
+
+spec:
+  storageClassName: host-test
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Mi
+```
+
+> 第二步执行了以后，记得去看下pv和pvc是否绑定在一起了。
+
+- 第三步：给Pod挂载PersistentVolume
+  - 虽然嘴巴上说是PersistentVolume，但我们要用的其实是 pvc
+  - `claimName: host-5m-pvc` 是pvc的metadata里的 `name` 哦！
+
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: host-pvc-pod
+
+spec:
+  volumes:
+  - name: host-pvc-vol
+    persistentVolumeClaim:
+      claimName: host-5m-pvc
+
+  containers:
+    - name: ngx-pvc-pod
+      image: nginx:alpine
+      ports:
+      - containerPort: 80
+      volumeMounts:
+      - name: host-pvc-vol
+        mountPath: /tmp
+```
+
+> 等pod启了以后，我们进去实验一下：
+
+```bash
+k exec -it host-pvc-pod -- sh
+
+cd /tmp
+touch szy.txt
+```

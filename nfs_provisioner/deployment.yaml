@@ -31,9 +31,9 @@ spec:
             - name: NFS_SERVER
               value: 10.124.0.2
             - name: NFS_PATH
-              value: /ifs/kubernetes
+              value: /tmp/nfs
       volumes:
         - name: nfs-client-root
           nfs:
             server: 10.124.0.2
-            path: /ifs/kubernetes
+            path: /tmp/nfs

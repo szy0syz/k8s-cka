@@ -162,6 +162,81 @@ $ ntpdate time.windows.com
 - 去DigitalOcean翻教程，那里最好
 - 配置镜像下载加速器
 
+## 基于kubeadmin安装k8s集群
+
+> 已在DO的Ubuntu 20.2中测试，22中不行！ —— 2022.8.22
+
+```
+# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+# https://github.com/containerd/containerd/issues/4581
+# https://www.devopsroles.com/install-kubernetes-on-ubuntu/
+
+# (Common)
+# Install Docker
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+apt-cache policy docker-ce
+sudo apt install docker-ce -y
+
+sudo systemctl status docker
+
+
+
+# (master node)
+# sysctl params required by setup, params persist across reboots
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+# Apply sysctl params without reboot
+sudo sysctl --system
+
+
+# Installation
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+
+rm /etc/containerd/config.toml
+systemctl restart containerd
+
+
+kubeadm init --pod-network-cidr=10.244.0.0/16 
+
+kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=10.124.0.3,114.215.201.87
+
+kubeadm join 10.124.0.3:6443 --token ljnag3.ro3wwkfw3x2mb5pk \
+	--discovery-token-ca-cert-hash sha256:c9943b5e9d2c00bc1a88a3ea26a21e78f08cc541e2d8f0f726cb8cfa2e90fd05
+
+# --------------------
+
+# Installation (Worker node)
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+
+
+
+# --------最后初始化网络
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+```
+
 ## k8s CNI网络模型
 
 ![003](images/003.jpg)

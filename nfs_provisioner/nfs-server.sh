@@ -1,5 +1,3 @@
-# chrono @ 2022-05
-
 # server
 sudo apt -y install nfs-kernel-server
 
@@ -8,7 +6,7 @@ mkdir -p /tmp/nfs
 
 # config
 cat << EOF | sudo tee -a /etc/exports
-/tmp/nfs 192.168.10.0/24(rw,sync,no_subtree_check,no_root_squash,insecure)
+/tmp/nfs 10.124.0.2/24(rw,sync,no_subtree_check,no_root_squash,insecure)
 EOF
 
 # start

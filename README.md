@@ -329,3 +329,28 @@ echo-cj-27666145-tfpqm   0/1     Completed   0          14s
 ![008](images/008.jpg)
 
 ![009](images/009.webp)
+
+## PersistentVolume
+
+> PV相关小实验
+
+### host-path 的PV使用
+
+- 第一步: 肯先定义PV，注意类型是 `storageClassName: host-test`
+  - 有个问题得注意 host-path 只能是 `ReadWriteOnce`
+
+```yml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-10m-pv
+
+spec:
+  storageClassName: host-test
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Mi
+  hostPath:
+    path: /tmp/host-10m-pv/
+```

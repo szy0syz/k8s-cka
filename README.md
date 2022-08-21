@@ -421,6 +421,8 @@ touch szy.txt
 >
 > 晕死，一定要在ngs服务端提前建好文件夹
 
+<img width="970" src="https://user-images.githubusercontent.com/10555820/185800037-e878de25-7adf-468c-8c02-eb6b68fdad4b.png">
+
 ```yml
 apiVersion: v1
 kind: PersistentVolume
@@ -478,6 +480,8 @@ spec:
           mountPath: /tmp
 ```
 
+<img width="1078" src="https://user-images.githubusercontent.com/10555820/185800049-b6386a45-ad12-4139-be32-55b0786878be.png">
+
 ### PV + Provisioner
 
 > 现在PV已经能动态了，可以适应飘逸pod了，但还需要人工分配，麻烦了。
@@ -485,3 +489,5 @@ spec:
 > k8s 里有“动态存储卷”的概念，它可以用 StorageClass 绑定一个 Provisioner 对象，而这个 Provisioner 就是一个能够自动管理存储、创建 PV 的应用，代替了原来系统管理员的手工劳动。
 >
 > 真的不容易啊，做个k8s的实验！
+
+<img width="528" src="https://user-images.githubusercontent.com/10555820/185800003-9a671f74-3fc2-4175-91ae-69cb8c130e32.png">

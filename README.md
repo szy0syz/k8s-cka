@@ -23,6 +23,8 @@
 
 ## K8s集群架构与组件
 
+https://user-images.githubusercontent.com/10555820/186076567-be539ef5-8912-40c4-83b4-ac42e3e58cca.mp4
+
 ### Master组件
 
 - `kube-apiserver`

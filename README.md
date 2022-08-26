@@ -570,3 +570,12 @@ spec:
 > 真的不容易啊，做个k8s的实验！
 
 <img width="528" src="https://user-images.githubusercontent.com/10555820/185800003-9a671f74-3fc2-4175-91ae-69cb8c130e32.png">
+
+## Scheduling
+
+> 编排的奥义
+
+<img width="990" alt="image" src="https://user-images.githubusercontent.com/10555820/186835515-ff277365-7aa3-4766-945f-9d6774f0e2ae.png">
+
+<img width="1183" alt="image" src="https://user-images.githubusercontent.com/10555820/186835753-b41c5a1b-4a40-4836-a80f-f1e48ebd4def.png">
+

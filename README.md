@@ -575,7 +575,8 @@ spec:
 
 > 编排的奥义
 
-<img width="990" alt="image" src="https://user-images.githubusercontent.com/10555820/186835515-ff277365-7aa3-4766-945f-9d6774f0e2ae.png">
+<img width="776" alt="image" src="https://user-images.githubusercontent.com/10555820/187035255-209c6122-7372-47ca-924e-b18387998978.png">
 
-<img width="1183" alt="image" src="https://user-images.githubusercontent.com/10555820/186835753-b41c5a1b-4a40-4836-a80f-f1e48ebd4def.png">
+<img width="678" alt="image" src="https://user-images.githubusercontent.com/10555820/187035263-1a3904c9-2ef4-45c1-a5fa-7bf7bc55f84f.png">
 
+<img width="698" alt="image" src="https://user-images.githubusercontent.com/10555820/187035220-9a160e64-cb83-4e94-a582-e7fa8f88c39c.png">
